@@ -10,6 +10,7 @@ const usersRoutes = require('./routes/users');
 const linksRoutes = require('./routes/links');
 const personaRoutes = require('./routes/persona');
 const chatRoutes = require('./routes/chat');
+const importRoutes = require('./routes/import');
 
 // Initialize express app
 const app = express();
@@ -19,6 +20,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/api/import', importRoutes);
 
 // Connect to MongoDB (commented out for prototype)
 // mongoose.connect(process.env.MONGODB_URI, {

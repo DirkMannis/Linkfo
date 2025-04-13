@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Add useEffect
 import { useRouter } from 'next/router';
 import {
   Box,
@@ -16,8 +16,9 @@ import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import NextLink from 'next/link';
 
 const NavLink = ({ children, href }) => (
-  <NextLink href={href} passHref>
+  <NextLink href={href} passHref legacyBehavior>
     <Link
+      as="a"
       px={2}
       py={1}
       rounded={'md'}
@@ -31,19 +32,20 @@ const NavLink = ({ children, href }) => (
   </NextLink>
 );
 
+
 export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  
-  // Check if user is authenticated
-  useState(() => {
+
+  // Check if user is authenticated (moved to useEffect)
+  useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       setIsAuthenticated(true);
     }
-  }, []);
-  
+  }, []); // Runs once on client-side mount
+
   return (
     <Box bg={useColorModeValue('white', 'gray.800')} px={4} boxShadow="sm">
       <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
@@ -56,8 +58,8 @@ export default function Navbar() {
         />
         <HStack spacing={8} alignItems={'center'}>
           <Box fontWeight="bold" fontSize="xl" color="brand.500">
-            <NextLink href="/" passHref>
-              <Link _hover={{ textDecoration: 'none' }}>
+            <NextLink href="/" passHref legacyBehavior>
+              <Link as="a" _hover={{ textDecoration: 'none' }}>
                 Linkfo
               </Link>
             </NextLink>
@@ -120,6 +122,7 @@ export default function Navbar() {
             {isAuthenticated && <NavLink href="/dashboard">Dashboard</NavLink>}
             <NavLink href="/features">Features</NavLink>
             <NavLink href="/pricing">Pricing</NavLink>
+            <NavLink href="/import">Import</NavLink>
           </Stack>
         </Box>
       ) : null}

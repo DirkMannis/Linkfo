@@ -703,6 +703,16 @@ export default function Dashboard({ isAuthenticated, setIsAuthenticated }) {
                   >
                     Update Persona
                   </Button>
+
+<Button
+  leftIcon={<FaFileImport />}
+  onClick={() => router.push('/import')}
+  colorScheme="brand"
+  variant="outline"
+>
+  Import from Linktree
+</Button>
+
                 </Box>
               </VStack>
             </TabPanel>
