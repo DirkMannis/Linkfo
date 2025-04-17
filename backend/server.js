@@ -49,6 +49,8 @@ console.log('Attempting MongoDB connection with URI:', process.env.MONGODB_URI ?
 // .then(() => console.log('Connected to MongoDB'))
 // .catch(err => console.error('MongoDB connection error:', err));
 
+const dbStatus = 'Not connected';
+
 console.log('MongoDB connection attempt completed');
 
 logger.info('Server starting');
@@ -60,6 +62,9 @@ app.use('/api/users', usersRoutes);
 app.use('/api/links', linksRoutes);
 app.use('/api/persona', personaRoutes);
 app.use('/api/chat', chatRoutes);
+
+app.get('/api/health', (req, res) => {
+  console.log('Health check endpoint called');
 
 // Root route
 app.get('/', (req, res) => {
@@ -85,5 +90,14 @@ app.get('/api/test-logs', (req, res) => {
   logger.info(`Environment: ${process.env.NODE_ENV}`);
   logger.info(`MongoDB URI exists: ${Boolean(process.env.MONGODB_URI)}`);
   
+  res.json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+    database: dbStatus,
+    message: 'If you can see this, the API is working!'
+  });
+});
+
   res.json({ message: 'Logs generated, check Vercel logs' });
 });
