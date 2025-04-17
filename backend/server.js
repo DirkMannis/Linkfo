@@ -4,6 +4,11 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
+console.log('Server starting...');
+console.log('Connecting to MongoDB...');
+// After connection attempt
+console.log('MongoDB connection status:', connected ? 'Connected' : 'Failed');
+
 // Import routes
 const authRoutes = require('./routes/auth');
 const usersRoutes = require('./routes/users');

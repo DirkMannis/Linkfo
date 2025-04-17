@@ -67,3 +67,8 @@ process.on('SIGINT', async () => {
     console.log('MongoDB connection closed');
     process.exit(0);
 });
+
+app.get('/', (req, res) => {
+    console.log('Root route requested');
+    res.json({ status: 'App is running' });
+});
