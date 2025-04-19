@@ -25,17 +25,18 @@ export default function Register() {
   const router = useRouter();
   const toast = useToast();
 
-// In register.js, update the handleSubmit function:
 const handleSubmit = async (e) => {
   e.preventDefault();
   setIsLoading(true);
   
+  console.log('Form submitted with:', { name, email, password: '***' });  
+
   try {
-    console.log('Submitting registration form:', { name, email, password: '***' });
+   // Log the exact URL being called
+    console.log('API base URL:', process.env.NEXT_PUBLIC_API_URL || 'https://linkfo-pi.vercel.app') ;
+    console.log('Register endpoint:', '/api/auth/register');
     
-    const response = await authService.register(name, email, password);
-    console.log('Registration response:', response);
-    
+    await authService.register(name, email, password);    
     toast({
       title: 'Account created.',
       description: "We've created your account for you.",

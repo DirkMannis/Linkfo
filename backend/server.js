@@ -15,7 +15,7 @@ require('dotenv').config();
 console.log('Modules imported successfully');
 
 // Import routes
-const authRoutes = require('./routes/auth');
+const { router: authRoutes, verifyToken } = require('./routes/auth');
 app.use('/api/auth', authRoutes);
 
 const usersRoutes = require('./routes/users');
@@ -91,6 +91,9 @@ logger.info('Setting up routes');
 app.get('/api/health', (req, res) => {
   logger.info('Health check endpoint called');
   
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'API is working!' });
+
   // Check MongoDB connection
   const dbStatus = mongoose.connection.readyState === 1 ? 'Connected' : 'Not connected';
   
