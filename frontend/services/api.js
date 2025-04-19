@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// Create axios instance
+// Create axios instance with base URL
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://linkfo-pi.vercel.app',
   headers: {
@@ -8,7 +8,7 @@ const api = axios.create({
   },
 }) ;
 
-// Add request interceptor to add auth token
+// Add request interceptor to include auth token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -22,122 +22,202 @@ api.interceptors.request.use(
   }
 );
 
-// Add response interceptor to handle errors
-api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    // Handle 401 Unauthorized errors
-    if (error.response && error.response.status === 401) {
-      localStorage.removeItem('token');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
-  }
-);
-
 // Auth services
 const authService = {
-  
   register: async (name, email, password) => {
     console.log('Sending registration request to:', api.defaults.baseURL + '/api/auth/register');
     console.log('With data:', { name, email, password: '***' });
-
+    
     try {
       const response = await api.post('/api/auth/register', { name, email, password });
       console.log('Registration successful:', response.data);
+      
+      // Store token in localStorage
+      if (response.data && response.data.token) {
+        localStorage.setItem('token', response.data.token);
+      }
+      
       return response.data;
     } catch (error) {
       console.error('Registration failed:', error.response || error);
       throw error;
     }
   },
-};
-
+  
+  login: async (email, password) => {
+    try {
+      const response = await api.post('/api/auth/login', { email, password });
+      
+      // Store token in localStorage
+      if (response.data && response.data.token) {
+        localStorage.setItem('token', response.data.token);
+      }
+      
+      return response.data;
+    } catch (error) {
+      console.error('Login failed:', error.response || error);
+      throw error;
+    }
+  },
   
   logout: () => {
     localStorage.removeItem('token');
   },
   
-  getProfile: async () => {
-    const response = await api.get('/users/profile');
-    return response.data;
+  getCurrentUser: async () => {
+    try {
+      const response = await api.get('/api/auth/me');
+      return response.data;
+    } catch (error) {
+      console.error('Get current user failed:', error.response || error);
+      throw error;
+    }
   },
 };
 
 // Links services
 const linksService = {
   getLinks: async () => {
-    const response = await api.get('/links');
-    return response.data;
+    try {
+      const response = await api.get('/api/links');
+      return response.data;
+    } catch (error) {
+      console.error('Get links failed:', error.response || error);
+      throw error;
+    }
   },
   
-  addLink: async (link) => {
-    const response = await api.post('/links', link);
-    return response.data;
+  createLink: async (link) => {
+    try {
+      const response = await api.post('/api/links', link);
+      return response.data;
+    } catch (error) {
+      console.error('Create link failed:', error.response || error);
+      throw error;
+    }
   },
   
   updateLink: async (id, link) => {
-    const response = await api.put(`/links/${id}`, link);
-    return response.data;
+    try {
+      const response = await api.put(`/api/links/${id}`, link);
+      return response.data;
+    } catch (error) {
+      console.error('Update link failed:', error.response || error);
+      throw error;
+    }
   },
   
   deleteLink: async (id) => {
-    const response = await api.delete(`/links/${id}`);
-    return response.data;
+    try {
+      const response = await api.delete(`/api/links/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Delete link failed:', error.response || error);
+      throw error;
+    }
   },
 };
 
 // Persona services
 const personaService = {
   getPersona: async () => {
-    const response = await api.get('/persona');
-    return response.data;
+    try {
+      const response = await api.get('/api/persona');
+      return response.data;
+    } catch (error) {
+      console.error('Get persona failed:', error.response || error);
+      throw error;
+    }
   },
   
   updatePersona: async () => {
-    const response = await api.post('/persona/update');
-    return response.data;
+    try {
+      const response = await api.post('/api/persona/update');
+      return response.data;
+    } catch (error) {
+      console.error('Update persona failed:', error.response || error);
+      throw error;
+    }
   },
   
   getSources: async () => {
-    const response = await api.get('/persona/sources');
-    return response.data;
+    try {
+      const response = await api.get('/api/persona/sources');
+      return response.data;
+    } catch (error) {
+      console.error('Get sources failed:', error.response || error);
+      throw error;
+    }
   },
   
   addSource: async (source) => {
-    const response = await api.post('/persona/sources', source);
-    return response.data;
+    try {
+      const response = await api.post('/api/persona/sources', source);
+      return response.data;
+    } catch (error) {
+      console.error('Add source failed:', error.response || error);
+      throw error;
+    }
+  },
+};
+
+// Import services
+const importService = {
+  previewLinktree: async (username) => {
+    try {
+      const response = await api.get(`/api/import/linktree/preview?username=${username}`);
+      return response.data;
+    } catch (error) {
+      console.error('Preview Linktree failed:', error.response || error);
+      throw error;
+    }
+  },
+  
+  importLinktree: async (username) => {
+    try {
+      const response = await api.post('/api/import/linktree/import', { username });
+      return response.data;
+    } catch (error) {
+      console.error('Import Linktree failed:', error.response || error);
+      throw error;
+    }
   },
 };
 
 // Chat services
 const chatService = {
   getChatHistory: async () => {
-    const response = await api.get('/chat/history');
-    return response.data;
+    try {
+      const response = await api.get('/api/chat/history');
+      return response.data;
+    } catch (error) {
+      console.error('Get chat history failed:', error.response || error);
+      throw error;
+    }
   },
   
   sendMessage: async (message) => {
-    const response = await api.post('/chat/message', { message });
-    return response.data;
+    try {
+      const response = await api.post('/api/chat/message', { message });
+      return response.data;
+    } catch (error) {
+      console.error('Send message failed:', error.response || error);
+      throw error;
+    }
   },
 };
 
 // Stats services
 const statsService = {
   getStats: async () => {
-    const response = await api.get('/users/stats');
-    return response.data;
+    try {
+      const response = await api.get('/api/users/stats');
+      return response.data;
+    } catch (error) {
+      console.error('Get stats failed:', error.response || error);
+      throw error;
+    }
   },
 };
 
-
-
-// Add this for debugging
-console.log('API base URL:', process.env.NEXT_PUBLIC_API_URL || 'https://linkfo-pi.vercel.app') ;
-
-
-export { api, authService, linksService, personaService, chatService, statsService };
-
+export { api, authService, linksService, personaService, importService, chatService, statsService };
