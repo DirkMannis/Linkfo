@@ -41,20 +41,20 @@ api.interceptors.response.use(
 const authService = {
   
   register: async (name, email, password) => {
-    console.log('Calling register API with:', { name, email, password: '***' });
+    console.log('Sending registration request to:', api.defaults.baseURL + '/api/auth/register');
+    console.log('With data:', { name, email, password: '***' });
+
     try {
-     const response = await api.post('/auth/register', { name, email, password });
-     console.log('Register API response:', response); 
-
-    // Store token in localStorage
-    localStorage.setItem('token', response.data.token);
-
-    return response.data;
+      const response = await api.post('/api/auth/register', { name, email, password });
+      console.log('Registration successful:', response.data);
+      return response.data;
     } catch (error) {
-      console.error('Register API error:', error);
+      console.error('Registration failed:', error.response || error);
       throw error;
     }
   },
+};
+
   
   logout: () => {
     localStorage.removeItem('token');

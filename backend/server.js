@@ -16,6 +16,8 @@ console.log('Modules imported successfully');
 
 // Import routes
 const authRoutes = require('./routes/auth');
+app.use('/api/auth', authRoutes);
+
 const usersRoutes = require('./routes/users');
 const linksRoutes = require('./routes/links');
 const personaRoutes = require('./routes/persona');
@@ -52,6 +54,7 @@ logger.info('Setting up middleware');
 app.use(cors({
   origin: ['https://linkfo-pi.vercel.app', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
   credentials: true
 }) );
 
