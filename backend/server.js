@@ -18,11 +18,24 @@ console.log('Modules imported successfully');
 const { router: authRoutes, verifyToken } = require('./routes/auth');
 app.use('/api/auth', authRoutes);
 
+const path = require('path');
 const usersRoutes = require('./routes/users');
 const linksRoutes = require('./routes/links');
 const personaRoutes = require('./routes/persona');
 const chatRoutes = require('./routes/chat');
 const importRoutes = require('./routes/import');
+
+// Handle Vercel serverless function requirements
+if (process.env.VERCEL) {
+  logger.info('Running in Vercel environment');
+
+  // Vercel-specific configuration
+  app.use((req, res, next) => {
+    // Log all incoming requests in Vercel
+    logger.info(`${req.method} ${req.url}`);
+    next();
+  });
+}
 
 // Initialize express app
 console.log('Initializing Express app');
