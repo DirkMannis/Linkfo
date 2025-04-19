@@ -79,18 +79,29 @@ const verifyToken = (req, res, next)  => {
 };
 
 // Register new user
+// In auth.js, update the register route:
 router.post('/register', (req, res) => {
   try {
     const { email, password, name } = req.body;
     
     logger.info(`Attempting to register user: ${email}`);
+    logger.info(`Request body: ${JSON.stringify(req.body)}`);
     
     // Validate input
     if (!email || !password || !name) {
-      logger.error('Registration failed: Missing required fields');
+      logger.error(`Registration failed: Missing required fields. Got: email=${!!email}, password=${!!password}, name=${!!name}`);
       return res.status(400).json({ message: 'All fields are required' });
     }
     
+    // Rest of the code...
+  } catch (error) {
+    logger.error(`Error in register endpoint: ${error.message}`, error);
+    logger.error(`Stack trace: ${error.stack}`);
+    res.status(500).json({ message: 'Internal server error during registration' });
+  }
+});
+
+
     // Check if user already exists
     const userExists = Object.values(users).find(user => user.email === email);
     if (userExists) {

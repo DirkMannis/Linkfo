@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create axios instance
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://linkfo-pi.vercel.app',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -39,16 +39,21 @@ api.interceptors.response.use(
 
 // Auth services
 const authService = {
-  login: async (email, password) => {
-    const response = await api.post('/auth/login', { email, password });
-    localStorage.setItem('token', response.data.token);
-    return response.data;
-  },
   
   register: async (name, email, password) => {
-    const response = await api.post('/auth/register', { name, email, password });
+    console.log('Calling register API with:', { name, email, password: '***' });
+    try {
+     const response = await api.post('/auth/register', { name, email, password });
+     console.log('Register API response:', response); 
+
+    // Store token in localStorage
     localStorage.setItem('token', response.data.token);
+
     return response.data;
+    } catch (error) {
+      console.error('Register API error:', error);
+      throw error;
+    }
   },
   
   logout: () => {
@@ -128,4 +133,11 @@ const statsService = {
   },
 };
 
+
+
+// Add this for debugging
+console.log('API base URL:', process.env.NEXT_PUBLIC_API_URL || 'https://linkfo-pi.vercel.app') ;
+
+
 export { api, authService, linksService, personaService, chatService, statsService };
+

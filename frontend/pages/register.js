@@ -25,33 +25,45 @@ export default function Register() {
   const router = useRouter();
   const toast = useToast();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+// In register.js, update the handleSubmit function:
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
+  
+  try {
+    console.log('Submitting registration form:', { name, email, password: '***' });
     
-    try {
-      await authService.register(name, email, password);
-      toast({
-        title: 'Account created.',
-        description: "We've created your account for you.",
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      });
-      router.push('/dashboard');
-    } catch (error) {
-      console.error('Registration error:', error);
-      toast({
-        title: 'An error occurred.',
-        description: error.response?.data?.message || 'Unable to create account.',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    const response = await authService.register(name, email, password);
+    console.log('Registration response:', response);
+    
+    toast({
+      title: 'Account created.',
+      description: "We've created your account for you.",
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    });
+    router.push('/dashboard');
+  } catch (error) {
+    console.error('Registration error:', error);
+    console.error('Error details:', {
+      message: error.message,
+      response: error.response,
+      data: error.response?.data
+    });
+    
+    toast({
+      title: 'An error occurred.',
+      description: error.response?.data?.message || 'Unable to create account.',
+      status: 'error',
+      duration: 5000,
+      isClosable: true,
+    });
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   return (
     <Layout>

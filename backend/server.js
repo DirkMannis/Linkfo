@@ -49,7 +49,12 @@ logger.info(`JWT Secret exists: ${Boolean(process.env.JWT_SECRET)}`);
 
 // Middleware
 logger.info('Setting up middleware');
-app.use(cors());
+app.use(cors({
+  origin: ['https://linkfo-pi.vercel.app', 'http://localhost:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}) );
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
