@@ -49,6 +49,12 @@ logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
 logger.info(`MongoDB URI exists: ${Boolean(process.env.MONGODB_URI)}`);
 logger.info(`JWT Secret exists: ${Boolean(process.env.JWT_SECRET)}`);
 
+if (!process.env.JWT_SECRET) {
+  logger.error('JWT_SECRET environment variable is not set!');
+  // In production, you might want to exit the process
+  // process.exit(1);
+}
+
 // Middleware
 logger.info('Setting up middleware');
 app.use(cors({
@@ -92,6 +98,7 @@ app.get('/api/health', (req, res) => {
   logger.info('Health check endpoint called');
   
 app.get('/api/test', (req, res) => {
+  console.log('Test endpoint called');
   res.json({ message: 'API is working!' });
 
   // Check MongoDB connection
@@ -124,6 +131,11 @@ logger.info(`Starting server on port: ${PORT}`);
 app.listen(PORT, () => {
   logger.info(`Server running on port ${PORT}`);
 });
+
+// Add a catch-all route at the end to log unmatched routes
+app.use('*', (req, res) => {
+  console.log(`Unmatched route: ${req.method} ${req.originalUrl}`);
+  res.status(404).json({ message: 'Route not found' });
 
 // For Vercel serverless functions
 module.exports = app;

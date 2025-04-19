@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create axios instance with base URL
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://linkfo-pi.vercel.app',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || '',  // Empty string means same domain
   headers: {
     'Content-Type': 'application/json',
   },
