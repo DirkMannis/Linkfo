@@ -1,4 +1,9 @@
 // Server initialization starting
+
+require('dotenv').config();
+console.log('JWT_SECRET:', process.env.JWT_SECRET ? 'Set' : 'Not set');
+console.log('MONGODB_URI:', process.env.MONGODB_URI ? 'Set' : 'Not set');
+
 console.log('Server initialization starting');
 
 const express = require('express');
@@ -67,12 +72,12 @@ if (process.env.MONGODB_URI) {
 
 // Routes
 logger.info('Setting up routes');
-app.use('/api/auth', authRoutes);
-app.use('/api/users', usersRoutes);
-app.use('/api/links', linksRoutes);
-app.use('/api/persona', personaRoutes);
-app.use('/api/chat', chatRoutes);
-app.use('/api/import', importRoutes);
+ app.use('/api/auth', authRoutes);
+ app.use('/api/users', usersRoutes);
+ app.use('/api/links', linksRoutes);
+ app.use('/api/persona', personaRoutes);
+ app.use('/api/chat', chatRoutes);
+ app.use('/api/import', importRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
