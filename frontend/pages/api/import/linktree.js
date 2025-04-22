@@ -10,8 +10,10 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: 'Linktree username is required' });
     }
     
-    // In a real implementation, this would scrape the Linktree page
-    // For now, we'll return mock data
+    console.log(`Processing Linktree import for username: ${username}`);
+    
+    // For now, we'll use mock data regardless of the username provided
+    // In a production environment, you would implement web scraping here
     const mockLinktreeData = {
       username: username,
       profileImage: 'https://randomuser.me/api/portraits/men/32.jpg',
@@ -25,7 +27,21 @@ export default async function handler(req, res) {
       ]
     };
     
-    return res.status(200) .json({
+    // Add some specific links if the username is crypto.banter
+    if (username.toLowerCase()  === 'crypto.banter') {
+      mockLinktreeData.links = [
+        { title: 'YouTube Channel', url: 'https://youtube.com/c/cryptobanter', id: '1' },
+        { title: 'Twitter', url: 'https://twitter.com/cryptobanter', id: '2' },
+        { title: 'Telegram', url: 'https://t.me/cryptobanter', id: '3' },
+        { title: 'Website', url: 'https://cryptobanter.com', id: '4' },
+        { title: 'Discord', url: 'https://discord.gg/cryptobanter', id: '5' }
+      ];
+      mockLinktreeData.bio = 'Crypto news and analysis';
+    }
+    
+    console.log('Returning mock data:', mockLinktreeData) ;
+    
+    return res.status(200).json({
       success: true,
       data: mockLinktreeData
     });

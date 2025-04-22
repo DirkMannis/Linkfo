@@ -29,6 +29,7 @@ export default function ImportLinktree() {
 
   const handlePreview = async (e) => {
     e.preventDefault();
+console.log('Starting preview for username:', username);
     
     if (!username) {
       toast({
@@ -45,6 +46,8 @@ export default function ImportLinktree() {
     
     try {
       // Call the API to get Linktree data
+console.log('Sending request to API:', { username });
+
       const response = await fetch('/api/import/linktree', {
         method: 'POST',
         headers: {
@@ -61,6 +64,7 @@ export default function ImportLinktree() {
       
       setPreviewData(data.data);
     } catch (error) {
+console.error('Preview error details:', error);
       console.error('Preview error:', error);
       toast({
         title: 'Error',
