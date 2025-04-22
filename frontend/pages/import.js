@@ -14,12 +14,10 @@ import {
   Divider,
   List,
   ListItem,
-  ListIcon,
   Flex,
   Image,
-  Badge,
 } from '@chakra-ui/react';
-import { CheckCircleIcon } from '@chakra-ui/icons';
+// Remove the CheckCircleIcon import if you don't have @chakra-ui/icons installed
 
 export default function ImportLinktree() {
   const [username, setUsername] = useState('');
