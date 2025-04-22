@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Box, Heading, Text, SimpleGrid, Stat, StatLabel, StatNumber, StatHelpText, Container, Spinner, Center } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import { FiDownload } from 'react-icons/fi';
 
 export default function Dashboard() {
   const [stats, setStats] = useState({
@@ -57,6 +58,18 @@ export default function Dashboard() {
     <Container maxW="container.xl" py={10}>
       <Heading as="h1" mb={6}>Dashboard</Heading>
       
+<Flex justifyContent="space-between" alignItems="center" mb={6}>
+  <Heading as="h1">Dashboard</Heading>
+  <Button
+    as="a"
+    href="/import"
+    colorScheme="blue"
+    leftIcon={<Icon as={FiDownload} />}
+  >
+    Import from Linktree
+  </Button>
+</Flex>
+
       <SimpleGrid columns={{ base: 1, md: 3 }} spacing={10} mb={10}>
         <Stat>
           <StatLabel>Profile Views</StatLabel>
@@ -84,6 +97,7 @@ export default function Dashboard() {
             <Text fontWeight="bold">{link.title}</Text>
             <Text>{link.clicks} clicks</Text>
           </Box>
+
         ))}
       </Box>
     </Container>

@@ -2,16 +2,16 @@ import axios from 'axios';
 
 // Create axios instance with base URL
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || '',  // Empty string means same domain
+  baseURL: '',  // Empty string for same-origin requests
   headers: {
     'Content-Type': 'application/json',
   },
-}) ;
+});
 
 // Add request interceptor to include auth token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -25,7 +25,7 @@ api.interceptors.request.use(
 // Auth services
 const authService = {
   register: async (name, email, password) => {
-    console.log('Sending registration request to:', api.defaults.baseURL + '/api/auth/register');
+    console.log('Sending registration request to:', '/api/auth/register');
     console.log('With data:', { name, email, password: '***' });
     
     try {
@@ -163,19 +163,9 @@ const personaService = {
 
 // Import services
 const importService = {
-  previewLinktree: async (username) => {
-    try {
-      const response = await api.get(`/api/import/linktree/preview?username=${username}`);
-      return response.data;
-    } catch (error) {
-      console.error('Preview Linktree failed:', error.response || error);
-      throw error;
-    }
-  },
-  
   importLinktree: async (username) => {
     try {
-      const response = await api.post('/api/import/linktree/import', { username });
+      const response = await api.post('/api/import/linktree', { username });
       return response.data;
     } catch (error) {
       console.error('Import Linktree failed:', error.response || error);
